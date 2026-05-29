@@ -17,9 +17,7 @@ window.addEventListener('load', () => {
 // === ANIMATED BROWSER TITLE ===
 function startTitleRotation() {
     const titles = [
-        'Anas — Portfolio',
-        'Anas — Data Science',
-        'Anas — UI/UX Design',
+       
         'Anas Nakhuda',
     ];
     let index = 0;
@@ -296,7 +294,7 @@ contactForm.addEventListener('submit', (e) => {
     const btn = e.target.querySelector('button');
     const originalText = btn.innerHTML;
     
-    btn.innerHTML = '<i class="fas fa-circle-notch animate-spin"></i> Mengirim...';
+    btn.innerHTML = '<i class="fas fa-circle-notch animate-spin"></i> Sending...';
     btn.disabled = true;
 
     setTimeout(() => {
