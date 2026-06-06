@@ -4,18 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="images/logo.svg"/>
-    <title>Anas Nakhuda</title>
+    <title>Anas Nakhuda-Data Science & ML</title>
    <meta name="description" content="Portfolio of Anas Nakhuda — Data Science intern and UI/UX designer. Machine learning projects, Figma landing pages, and interactive web experiences.">
    
     <meta name="author" content="Anas Nakhuda">
     <meta name="theme-color" content="#2563eb">
-
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     
-    <!-- Font Awesome -->
+<!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Tailwind CSS (CDN) -->
@@ -27,8 +26,8 @@
             darkMode: 'class',
             theme: {
                 fontFamily: {
-                    sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    display: ['"Space Grotesk"', 'sans-serif'],
+                    sans: ['"JetBrains Mono"', 'monospace'],
+                    display: ['"Syne"', 'sans-serif'],
                 },
                 extend: {
                     colors: {
@@ -36,7 +35,7 @@
                         secondary: '#4f46e5',
                         dark: '#050505',
                         surface: '#0a0a0a',
-                        whatsapp: '#25D366',
+                    
                     },
                     animation: {
                         'fade-up': 'fadeUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
@@ -84,6 +83,11 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-dark dark:text-slate-200 transition-colors duration-500 selection:bg-primary selection:text-white overflow-x-hidden">
+      <div id="cursor-dot" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 10000; width: 6px; height: 6px; border-radius: 50%; background: #ffffff; transform: translate(-50%,-50%); box-shadow: 0 0 10px #ffffff, 0 0 20px #00d2ff; will-change: left, top;"></div>
+
+<div id="cursor-ring" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid rgba(0, 210, 255, 0.5); background: rgba(37, 99, 235, 0.03); transform: translate(-50%,-50%); transition: width 0.2s cubic-bezier(0.25, 1, 0.5, 1), height 0.2s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.2s, background-color 0.2s; will-change: left, top;"></div>
+
+<div id="cursor-glow" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998; width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, transparent 75%); transform: translate(-50%,-50%); will-change: left, top;"></div>
 
     <!-- [NEW] Noise Texture Overlay -->
     <div class="fixed inset-0 z-[1] bg-noise pointer-events-none opacity-40 mix-blend-overlay"></div>
@@ -187,20 +191,40 @@
                     </div>
                 </div>
 
-               <div class="hero-image-container relative h-[400px] md:h-[600px] flex items-center justify-center order-1 lg:order-2 perspective-1000">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-full blur-3xl animate-pulse-slow"></div>
-                    <div class="hero-circle-outer absolute w-64 h-64 md:w-96 md:h-96 border border-slate-200 dark:border-white/10 rounded-full animate-spin-slow"></div>
-                    <div class="hero-circle-middle absolute w-48 h-48 md:w-72 md:h-72 border border-dashed border-slate-300 dark:border-white/20 rounded-full animate-spin-slow [animation-direction:reverse]"></div>
-                    
-                    <div class="hero-profile-img hero-image-glow relative w-56 h-56 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-white dark:border-white/10 shadow-2xl animate-[float_6s_ease-in-out_infinite] z-10 group cursor-pointer hoverable magnetic-btn">
-                        <img src="images/Hd image.png" 
-                             alt="anas" 
-                             width="1000" height="1000"
-                             class="class="w-full h-full object-cover object-top rounded-full scale-110 translate-y-2"">
-                    </div>
-                </div>
+              <div class="hero-image-container relative h-[400px] md:h-[600px] flex items-center justify-center order-1 lg:order-2 perspective-1000">
+    <div class="absolute inset-0 bg-primary/10 dark:bg-gradient-to-tr dark:from-primary/20 dark:to-secondary/20 rounded-full blur-3xl animate-pulse-slow"></div>
+    
+    <div class="hero-circle-outer absolute w-64 h-64 md:w-96 md:h-96 border border-primary/30 dark:border-white/10 rounded-full animate-spin-slow"></div>
+    
+    <div class="hero-circle-middle absolute w-48 h-48 md:w-72 md:h-72 border border-dashed border-secondary/40 dark:border-white/20 rounded-full animate-spin-slow [animation-direction:reverse]"></div>
+    
+    <div class="hero-profile-img hero-image-glow relative w-56 h-56 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-white dark:border-white/10 shadow-2xl animate-[float_6s_ease-in-out_infinite] z-10 group cursor-pointer hoverable magnetic-btn">
+        <img src="images/Hd image.png" 
+             alt="anas" 
+             width="1000" height="1000"
+             class="w-full h-full object-cover object-top rounded-full scale-110 translate-y-2">
+    </div>
+</div>
             </div>
-        </div>
+       <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 pointer-events-none">
+    
+    <div style="width: 2px; height: 55px; background: linear-gradient(to bottom, #407380, transparent); position: relative; overflow: hidden; border-radius: 99px;">
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; animation: inlineCyberDrop 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;"></div>
+    </div>
+    
+    <span class="text-[10px] tracking-[0.25em] font-bold uppercase text-slate-400 dark:text-slate-500">Scroll</span>
+</div>
+
+<style>
+@keyframes inlineCyberDrop {
+    0% {
+        transform: translateY(-100%);
+    }
+    70%, 100% {
+        transform: translateY(100%);
+    }
+}
+</style>
     </section>
 
     
@@ -615,25 +639,40 @@
                 </div>
 
 
-                <div class="bg-white dark:bg-surface p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-white/10 reveal-on-scroll delay-300">
-                    <form class="space-y-6" id="contact-form">
-                        <div>
-                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Name</label>
-                            <input type="text" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all dark:text-white hoverable magnetic-btn" placeholder="Your Name" required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Email</label>
-                            <input type="email" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all dark:text-white hoverable magnetic-btn" placeholder="email@gmail.com" required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Message</label>
-                            <textarea rows="4" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all dark:text-white hoverable magnetic-btn" placeholder="Tell me about your project..." required></textarea>
-                        </div>
-                        <button type="submit" class="w-full py-4 bg-slate-900 dark:bg-white text-white dark:text-black rounded-xl font-bold text-lg hover:scale-[1.02] transition-transform shadow-lg hoverable magnetic-btn focus:outline-none">
-                            Send Message
-                        </button>
-                    </form>
-                </div>
+          
+  
+  
+  <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+    <input type="hidden" name="access_key" value="974fa7f3-0362-43d7-ada0-be07307dc5b4">
+    <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+
+    <div class="bg-white dark:bg-surface p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-white/10 reveal-on-scroll delay-300">
+        <div class="space-y-6"> <div>
+                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Name</label>
+                <input type="text" name="name" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all dark:text-white hoverable magnetic-btn" placeholder="Your Name" required>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Email</label>
+                <input type="email" name="email" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all dark:text-white hoverable magnetic-btn" placeholder="email@gmail.com" required>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Message</label>
+                <textarea rows="4" name="message" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all dark:text-white hoverable magnetic-btn" placeholder="Tell me about your project..." required></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-4 bg-slate-900 dark:bg-white text-white dark:text-black rounded-xl font-bold text-lg hover:scale-[1.02] transition-transform shadow-lg hoverable magnetic-btn focus:outline-none">
+                Send Message
+            </button>
+
+        </div>
+    </div>
+</form>
+
+    
+   
+
             </div>
 
             <footer class="mt-24 pt-8 border-t border-slate-200 dark:border-white/10 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500 reveal-on-scroll">
@@ -697,11 +736,7 @@
         </div>
     </div>
 
-    <a href="" target="_blank" aria-label="Chat WhatsApp" class="fixed bottom-8 right-8 z-[60] w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-300 hoverable magnetic-btn group">
-        <span class="absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-30 animate-ping"></span>
-        <i class="fab fa-whatsapp text-3xl leading-none z-10 group-hover:rotate-12 transition-transform"></i>
-    </a>
-
+   
     <button id="scrollToTopBtn" aria-label="Gulir ke Atas" class="fixed bottom-28 right-8 z-50 w-12 h-12 bg-white dark:bg-surface border border-slate-200 dark:border-white/20 rounded-full flex items-center justify-center text-slate-600 dark:text-white shadow-lg translate-y-20 opacity-0 transition-all duration-300 hover:border-primary hover:text-primary hover:-translate-y-1 hoverable focus:outline-none">
         <i class="fas fa-arrow-up"></i>
     </button>
