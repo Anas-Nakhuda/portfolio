@@ -43,7 +43,7 @@
     position:relative;
   }
 
-  /* ====== SAHIL-STYLE GRID BUTTON BACKGROUND ====== */
+  /* ====== LIGHTWEIGHT PARTICLE BACKGROUND ====== */
   .bg-grid-wrap{
     position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
   }
@@ -58,31 +58,10 @@
     0%,100%{opacity:0.75;transform:translate(20%,-10%) scale(1);}
     50%{opacity:1;transform:translate(18%,-8%) scale(1.06);}
   }
-  .bg-grid-buttons{
+  #bgParticles{
     position:absolute;inset:0;
-    display:grid;
-    gap:8px;
-    padding:16px;
-    mask-image:radial-gradient(ellipse 110% 100% at 52% 42%, #000 35%, transparent 100%);
-    -webkit-mask-image:radial-gradient(ellipse 110% 100% at 52% 42%, #000 35%, transparent 100%);
-  }
-  .grid-cell{
-    aspect-ratio:1;
-    min-height:48px;
-    border-radius:12px;
-    border:1px solid rgba(255,255,255,0.065);
-    background:rgba(255,255,255,0.022);
-    transition:border-color .35s, box-shadow .35s, background .35s;
-  }
-  .grid-cell.lit{
-    border-color:rgba(34,197,94,0.45);
-    background:rgba(34,197,94,0.07);
-    box-shadow:0 0 14px rgba(34,197,94,0.22), inset 0 0 10px rgba(34,197,94,0.06);
-  }
-  .grid-cell.hot{
-    border-color:rgba(34,197,94,0.75);
-    background:rgba(34,197,94,0.12);
-    box-shadow:0 0 22px rgba(34,197,94,0.38), inset 0 0 14px rgba(34,197,94,0.10);
+    width:100%;height:100%;
+    display:block;
   }
 
   /* ====== NOISE GRAIN OVERLAY ====== */
@@ -589,7 +568,7 @@
 <!-- ====== BACKGROUND LAYERS ====== -->
 <div class="bg-grid-wrap" aria-hidden="true">
   <div class="bg-grid-spotlight"></div>
-  <div class="bg-grid-buttons" id="bgGridButtons"></div>
+  <canvas id="bgParticles"></canvas>
 </div>
 <div class="bg-noise" aria-hidden="true"></div>
 
@@ -1049,56 +1028,102 @@
     });
   });
 
-  // ---- Grid button background (Sahil-style) ----
+  // ---- Lightweight canvas particle background ----
+  // A single <canvas> with a plain 2D loop replaces the old approach of
+  // hundreds/thousands of DOM cells whose bounding boxes were recalculated
+  // (forcing layout) on every single mousemove — that was the main lag source.
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const bgGrid = document.getElementById('bgGridButtons');
-  const CELL = 52;
-  let gridCells = [];
-  let gridCols = 0;
+  const pCanvas = document.getElementById('bgParticles');
 
-  function buildGrid(){
-    if(!bgGrid) return;
-    const cols = Math.ceil(window.innerWidth / CELL) + 2;
-    const rows = Math.ceil(document.documentElement.scrollHeight / CELL) + 2;
-    bgGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-    bgGrid.innerHTML = '';
-    gridCells = [];
-    const total = cols * rows;
-    for(let i = 0; i < total; i++){
-      const cell = document.createElement('div');
-      cell.className = 'grid-cell';
-      if(Math.random() < 0.04){
-        cell.classList.add('lit');
-        cell.dataset.seed = '1';
-      }
-      bgGrid.appendChild(cell);
-      gridCells.push(cell);
+  if(pCanvas){
+    const pCtx = pCanvas.getContext('2d', { alpha: true });
+    let pw, ph, pDpr;
+    let dots = [];
+    let pMouseX = -9999, pMouseY = -9999;
+    let bgVisible = true;
+
+    function sizeParticleCanvas(){
+      pDpr = Math.min(window.devicePixelRatio || 1, 1.5); // cap DPR, no benefit past this for tiny dots
+      pw = window.innerWidth;
+      ph = window.innerHeight;
+      pCanvas.width = pw * pDpr;
+      pCanvas.height = ph * pDpr;
+      pCanvas.style.width = pw + 'px';
+      pCanvas.style.height = ph + 'px';
+      pCtx.setTransform(pDpr, 0, 0, pDpr, 0, 0);
     }
-    gridCols = cols;
-  }
 
-  buildGrid();
-  let resizeTimer;
-  window.addEventListener('resize', ()=>{
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(buildGrid, 150);
-  });
+    function makeDots(){
+      // scale to viewport area, hard-capped so big screens stay cheap
+      const count = Math.min(80, Math.round((pw * ph) / 18000));
+      dots = Array.from({length: count}, () => ({
+        x: Math.random() * pw,
+        y: Math.random() * ph,
+        vx: (Math.random() - 0.5) * 0.10,
+        vy: (Math.random() - 0.5) * 0.10,
+        r: Math.random() * 1.3 + 0.6,
+        a: Math.random() * 0.45 + 0.2
+      }));
+    }
 
-  window.addEventListener('mousemove', e=>{
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    if(!bgGrid || reduceMotion) return;
-    gridCells.forEach(cell=>{
-      const r = cell.getBoundingClientRect();
-      const cx = r.left + r.width / 2;
-      const cy = r.top + r.height / 2;
-      const dist = Math.hypot(mouseX - cx, mouseY - cy);
-      cell.classList.remove('hot', 'lit');
-      if(dist < 88) cell.classList.add('hot');
-      else if(dist < 175) cell.classList.add('lit');
-      else if(cell.dataset.seed === '1') cell.classList.add('lit');
+    function drawDots(){
+      pCtx.clearRect(0, 0, pw, ph);
+      for(const d of dots){
+        pCtx.beginPath();
+        pCtx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        pCtx.fillStyle = `rgba(34,197,94,${d.a})`;
+        pCtx.fill();
+      }
+    }
+
+    function stepDots(){
+      if(!bgVisible) return;
+      for(const d of dots){
+        d.x += d.vx;
+        d.y += d.vy;
+
+        // gentle drift away from the cursor — cheap, no getBoundingClientRect anywhere
+        const dx = d.x - pMouseX, dy = d.y - pMouseY;
+        const dist2 = dx * dx + dy * dy;
+        if(dist2 < 14400){ // within ~120px
+          const dist = Math.sqrt(dist2) || 1;
+          d.x += (dx / dist) * 0.22;
+          d.y += (dy / dist) * 0.22;
+        }
+
+        if(d.x < -10) d.x = pw + 10; else if(d.x > pw + 10) d.x = -10;
+        if(d.y < -10) d.y = ph + 10; else if(d.y > ph + 10) d.y = -10;
+      }
+      drawDots();
+      requestAnimationFrame(stepDots);
+    }
+
+    sizeParticleCanvas();
+    makeDots();
+
+    let pResizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(pResizeTimer);
+      pResizeTimer = setTimeout(() => { sizeParticleCanvas(); makeDots(); if(reduceMotion) drawDots(); }, 200);
     });
-  });
+
+    window.addEventListener('mousemove', e => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      pMouseX = e.clientX; pMouseY = e.clientY;
+    }, { passive: true });
+
+    // Pause the loop entirely when the tab isn't visible
+    document.addEventListener('visibilitychange', () => {
+      bgVisible = !document.hidden;
+      if(bgVisible && !reduceMotion) requestAnimationFrame(stepDots);
+    });
+
+    if(reduceMotion){
+      drawDots(); // one static frame, no animation loop at all
+    } else {
+      requestAnimationFrame(stepDots);
+    }
+  }
 
   // ---- Orbit labels: DS formulas travelling along ellipse paths ----
   const ringDefs = {
